@@ -22,11 +22,21 @@ import (
 	"testing"
 
 	fuzz "github.com/AdaLogics/go-fuzz-headers"
+	"github.com/spf13/viper"
 	//"github.com/go-openapi/loads"
 
 	"github.com/sigstore/rekor/pkg/generated/restapi/operations/entries"
 	//"github.com/sigstore/rekor/pkg/generated/restapi/operations"
 	"github.com/sigstore/rekor/pkg/generated/models"
+)
+
+var (
+	conf := var yamlDeepNestedSlices = []byte(`TV:
+- title: "The Expanse"
+  title_i18n:
+    USA: "The Expanse"
+    Japan: "エクスパンス -巨獣めざめる-"
+`)
 )
 
 func init() {
@@ -35,6 +45,7 @@ func init() {
 
 func FuzzSearchLogQueryHandler(f *testing.F) {
 	f.Fuzz(func(t *testing.T, data, httpBody []byte) {
+		v := viper.New()
 		slq := &models.SearchLogQuery{}
 		ff := fuzz.NewConsumer(data)
 		ff.GenerateStruct(slq)
